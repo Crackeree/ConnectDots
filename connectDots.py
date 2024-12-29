@@ -19,7 +19,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-COL = (192, 192, 144)
+COL = (18, 192, 234)
 CROXX = (122, 97, 144)
 CR1XX = (113, 131, 83)
 CR2XX = (250, 100, 70)
@@ -29,20 +29,14 @@ WIDTH, HEIGHT = 600, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Connect Dots Game")
 
-# Set up the grid
-
-
-# Game over flag
-game_over = False
 
 # Font for displaying text
 font = pygame.font.SysFont("Arial", 24)
 
-#
 START_POINT = 100
 END_POINT = 500
 SPACING = 50
-DOT_RADIUS = 8
+DOT_RADIUS = 10
 
 dots = []
 dic = {}
@@ -146,8 +140,10 @@ def drawO(squarePoints):
     pygame.draw.circle(screen, color, center, radius, lineWidth)
 
 
-def showScores():
 
+
+def showScores():
+    
     scores = [0, 0]
     
     for key in dic:
@@ -181,6 +177,53 @@ def showScores():
         screen.blit(text, (start_x, start_y + y_offset))
 
         y_offset += spacing
+
+    isGameOver = len(dic) == scores[0] + scores[1]
+    
+    #Show who's turn
+
+    sx, sy = WIDTH // 2 - 60, 30
+    
+    if isGameOver == False:    
+
+        whosTurn = players[player]
+    
+        text = font.render(f"{whosTurn}'s turn", True, BLUE)
+           
+        screen.blit(text, (sx, sy))
+        
+    else:
+        
+        text = font.render("Game over!", True, RED)
+           
+        screen.blit(text, (sx, sy))
+
+    #end of show who's turn
+
+    
+
+    if isGameOver == True:
+        
+       isDraw = scores[0] == scores[1]
+       
+       if isDraw == True:
+           
+           sx, sy = WIDTH // 2 - 60, HEIGHT - 60
+           
+           text = font.render("It's a draw", True, COL)
+           
+           screen.blit(text, (sx, sy))
+           
+       else:
+           
+           winner = players[0] if (scores[0] > scores[1]) else players[0] 
+           
+           text = font.render(f"{winner} wins", True, COL)
+           
+           sx, sy = WIDTH // 2 - 60, HEIGHT - 60
+           
+           screen.blit(text, (sx, sy))
+        
         
 def drawSymbols():
     
@@ -203,9 +246,6 @@ def drawSymbols():
                 drawO(squarePoints)
             
         
-
-isAgain = False
-
 while True:
 
     for event in pygame.event.get():
@@ -285,9 +325,7 @@ while True:
                                     
                                     who = player
 
-                                    isAgain = True
-                                 
-                                    
+                                    isAgain = True     
 
                                 value[0] = sqr
                                 
